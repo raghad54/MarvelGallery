@@ -21,6 +21,9 @@
 		04961E2C2CE4CE7B0027DD65 /* CharacterDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04961E2B2CE4CE7B0027DD65 /* CharacterDetailsModel.swift */; };
 		04961E2E2CE4CE980027DD65 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04961E2D2CE4CE980027DD65 /* NetworkManager.swift */; };
 		04961E302CE4D7F30027DD65 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04961E2F2CE4D7F30027DD65 /* APIService.swift */; };
+		04961E322CE4D9C40027DD65 /* MarvelOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04961E312CE4D9C40027DD65 /* MarvelOperations.swift */; };
+		04961E372CE557080027DD65 /* CharacterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04961E362CE557080027DD65 /* CharacterRowView.swift */; };
+		04961E3A2CE564EE0027DD65 /* GoToButtomModifiers .swift in Sources */ = {isa = PBXBuildFile; fileRef = 04961E392CE564EE0027DD65 /* GoToButtomModifiers .swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,9 @@
 		04961E2B2CE4CE7B0027DD65 /* CharacterDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailsModel.swift; sourceTree = "<group>"; };
 		04961E2D2CE4CE980027DD65 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		04961E2F2CE4D7F30027DD65 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		04961E312CE4D9C40027DD65 /* MarvelOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelOperations.swift; sourceTree = "<group>"; };
+		04961E362CE557080027DD65 /* CharacterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterRowView.swift; sourceTree = "<group>"; };
+		04961E392CE564EE0027DD65 /* GoToButtomModifiers .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoToButtomModifiers .swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +152,8 @@
 		04961E1F2CE4CC5D0027DD65 /* CharacterList */ = {
 			isa = PBXGroup;
 			children = (
+				04961E382CE564C80027DD65 /* Modifiers */,
+				04961E352CE556E90027DD65 /* CharacterRowView */,
 				04961DF72CE4C51B0027DD65 /* CharacterListView.swift */,
 				04961E212CE4CCD70027DD65 /* CharacterListViewModel.swift */,
 				04961E232CE4CCF30027DD65 /* CharacterListModel.swift */,
@@ -169,6 +177,7 @@
 				04961DF52CE4C51B0027DD65 /* MarvelGalleryApp.swift */,
 				04961E2D2CE4CE980027DD65 /* NetworkManager.swift */,
 				04961E2F2CE4D7F30027DD65 /* APIService.swift */,
+				04961E312CE4D9C40027DD65 /* MarvelOperations.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -178,6 +187,22 @@
 			children = (
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04961E352CE556E90027DD65 /* CharacterRowView */ = {
+			isa = PBXGroup;
+			children = (
+				04961E362CE557080027DD65 /* CharacterRowView.swift */,
+			);
+			path = CharacterRowView;
+			sourceTree = "<group>";
+		};
+		04961E382CE564C80027DD65 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				04961E392CE564EE0027DD65 /* GoToButtomModifiers .swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,14 +335,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04961E372CE557080027DD65 /* CharacterRowView.swift in Sources */,
 				04961E282CE4CE580027DD65 /* CharacterDetailView.swift in Sources */,
 				04961DF82CE4C51B0027DD65 /* CharacterListView.swift in Sources */,
 				04961E242CE4CCF30027DD65 /* CharacterListModel.swift in Sources */,
 				04961E2A2CE4CE630027DD65 /* CharacterDetailViewModel.swift in Sources */,
 				04961E2E2CE4CE980027DD65 /* NetworkManager.swift in Sources */,
 				04961E2C2CE4CE7B0027DD65 /* CharacterDetailsModel.swift in Sources */,
+				04961E3A2CE564EE0027DD65 /* GoToButtomModifiers .swift in Sources */,
 				04961E222CE4CCD70027DD65 /* CharacterListViewModel.swift in Sources */,
 				04961E302CE4D7F30027DD65 /* APIService.swift in Sources */,
+				04961E322CE4D9C40027DD65 /* MarvelOperations.swift in Sources */,
 				04961DF62CE4C51B0027DD65 /* MarvelGalleryApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

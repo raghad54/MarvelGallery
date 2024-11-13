@@ -7,18 +7,18 @@
 
 import Foundation
 
-struct CharacterDetailsModel: Identifiable, Decodable {
+struct CharacterDetailsModel: Codable,Identifiable {
     let id: Int
     let name: String
     let description: String
     let comics: ComicsList
 }
 
-struct ComicsList: Decodable {
+struct ComicsList: Codable {
     let items: [Comic]
 }
 
-struct Comic: Decodable, Identifiable {
+struct Comic: Codable, Identifiable {
     var id: String { resourceURI }
     let resourceURI: String
     let name: String

@@ -11,7 +11,13 @@ import SwiftUI
 struct MarvelGalleryApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CharacterListView(viewModel: createViewModel())
         }
     }
 }
+
+   func createViewModel() -> CharacterListViewModel {
+        let networkManager = NetworkManager(apiKey: "b9cfdbb42b402814a37567a6b7c40d3a")
+        let marvelOperations = MarvelOperations(networkManager: networkManager, apiService: APIService())
+        return CharacterListViewModel(operations: marvelOperations)
+    }
