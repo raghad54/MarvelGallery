@@ -5,7 +5,6 @@
 //  Created by Raghad's Mac on 13/11/2024.
 //
 
-import Foundation
 import SwiftUI
 
 struct CharacterRowView: View {
@@ -32,15 +31,15 @@ struct CharacterRowView: View {
             
             // Parallelogram Shape with Dynamic Width based on Text
             GeometryReader { geometry in
-                // Reduce width by 10 points from the calculated textWidth
-                let textWidth = min(geometry.size.width - 70, 230) - 25 // Decrease width by 10
-                
+                // Further reduce width by subtracting more points
+                let textWidth = min(geometry.size.width - 70, 220) - 60 // Further reduced width
+
                 Parallelogram()
                     .fill(Color.white)
                     .frame(width: textWidth, height: 40) // Adjust the height for text
                     .offset(x: 10, y: 15) // Keep space for text
-                
-                // Text inside the parallelogram with added top padding
+
+                // Text inside the parallelogram with added padding constraints
                 Text(character.name)
                     .font(.subheadline)
                     .bold()
@@ -48,9 +47,7 @@ struct CharacterRowView: View {
                     .frame(width: textWidth, height: 40)
                     .multilineTextAlignment(.center)
                     .lineLimit(2) // Allow wrapping for long text
-                    .padding(.horizontal, 5) // Padding for the text inside the parallelogram
-                    .padding(.top, 10) // Add top padding to push the text down a bit
-                    .padding(.bottom, 5) // Keep some bottom padding for text
+                    .padding(5) // Add padding on all sides of the text
             }
             .frame(height: 70) // Adjust the height for the parallelogram container
             .padding(.bottom, 10) // Padding at the bottom of the shape to separate it from the content below

@@ -23,7 +23,6 @@ class APIService: APIServiceProtocol {
         
         var urlString = "\(baseURL)/characters?apikey=\(publicKey)&ts=\(timestamp)&hash=\(hash)&offset=\(offset)&limit=\(limit)"
         
-        // Add the searchText query parameter if it exists
         if let searchText = searchText, !searchText.isEmpty {
             urlString += "&name=\(searchText)"
         }

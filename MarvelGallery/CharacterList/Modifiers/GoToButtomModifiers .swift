@@ -5,7 +5,6 @@
 //  Created by Raghad's Mac on 14/11/2024.
 //
 
-import Foundation
 import SwiftUI
 
 struct OnReachBottomModifier: ViewModifier {
@@ -19,10 +18,8 @@ struct OnReachBottomModifier: ViewModifier {
                 GeometryReader { proxy in
                     Color.clear
                         .onChange(of: proxy.frame(in: .global).maxY) { maxY in
-                            // Calculate when the action should be triggered
                             let screenHeight = UIScreen.main.bounds.height
-                            let triggerOffset: CGFloat = screenHeight * 0.8 // Trigger when 80% of the screen height is reached
-
+                            let triggerOffset: CGFloat = screenHeight * 0.8
                             if maxY < screenHeight + triggerOffset && !isTriggered {
                                 isTriggered = true
                                 action()

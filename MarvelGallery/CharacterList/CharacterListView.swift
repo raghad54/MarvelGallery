@@ -41,14 +41,14 @@ struct CharacterListView: View {
                             withAnimation {
                                 isSearching.toggle()
                                 if !isSearching {
-                                    searchText = "" // Clear search text when closing
-                                    isResultsVisible = true // Show table again when search is closed
+                                    searchText = ""
+                                    isResultsVisible = true
                                     showNoResults = false
                                     viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
                                 } else {
-                                    // Clear character list to show empty state when search is activated
+                                
                                     viewModel.charactersList = []
-                                    isResultsVisible = false // Hide table when search is activated
+                                    isResultsVisible = false
                                     showNoResults = false
                                     viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
                                 }
@@ -66,7 +66,6 @@ struct CharacterListView: View {
 
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        // Show Loading Indicator at the top while fetching characters
                         if viewModel.isLoading && !viewModel.isPaginating && !isSearching {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .red))
@@ -81,44 +80,36 @@ struct CharacterListView: View {
                                 .padding()
                         }
 
-                        // Show characters if results are visible
                         if isResultsVisible {
                             ForEach(viewModel.getCharactersToDisplay()) { character in
-                                // NavigationLink for character detail view
                                 NavigationLink(destination: CharacterDetailView(character: character)) {
                                     CharacterRowView(character: character)
                                 }
-                                .buttonStyle(PlainButtonStyle()) // Prevent row highlight on tap
+                                .buttonStyle(PlainButtonStyle())
                             }
 
-                            // Pagination Loading Indicator
                             if viewModel.isPaginating {
                                 ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .red)) // Red color for pagination indicator
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .red))
                                     .scaleEffect(1.5)
                                     .padding()
                             }
                         }
                     }
                     .onAppear {
-                        // Fetch the first batch of data when the view appears
                         if viewModel.charactersList.isEmpty {
                             viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
                         }
                     }
                     .onChange(of: searchText) { newValue in
-                        // Cancel previous timer if any
                         debounceTimer?.invalidate()
 
-                        // Start a new debounce timer
                         debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                            // Reset and fetch new data when search text changes
-                            showNoResults = false // Hide no results message while loading
+                            showNoResults = false
                             viewModel.fetchCharacters(isPaginating: false, searchText: newValue)
                         }
                     }
                     .onReachBottom {
-                        // Trigger pagination when the user reaches the bottom
                         if !viewModel.isPaginating && viewModel.hasMoreData {
                             viewModel.fetchCharacters(isPaginating: true, searchText: searchText)
                         }
@@ -126,10 +117,10 @@ struct CharacterListView: View {
                     .refreshable {
                         viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
                     }
-                    .background(Color.black) // Set the background of the ScrollView to black
+                    .background(Color.black)
                 }
             }
-            .background(Color.black.edgesIgnoringSafeArea(.all)) // Background for the whole view
+            .background(Color.black.edgesIgnoringSafeArea(.all)) 
         }
     }
 }
