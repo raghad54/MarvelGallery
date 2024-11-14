@@ -46,7 +46,6 @@ struct CharacterListView: View {
                                     showNoResults = false
                                     viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
                                 } else {
-                                
                                     viewModel.charactersList = []
                                     isResultsVisible = false
                                     showNoResults = false
@@ -59,7 +58,8 @@ struct CharacterListView: View {
                                 .foregroundColor(.red)
                         }
                     }
-                    .padding()
+                    .padding(.top, 10)
+                    .padding(.horizontal) 
                     .background(Color.black)
                     .zIndex(1)
                 }
@@ -120,7 +120,7 @@ struct CharacterListView: View {
                     .background(Color.black)
                 }
             }
-            .background(Color.black.edgesIgnoringSafeArea(.all)) 
+            .background(Color.black.edgesIgnoringSafeArea(.all))
         }
     }
 }

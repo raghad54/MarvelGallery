@@ -29,44 +29,28 @@ struct CharacterRowView: View {
                     .frame(width: UIScreen.main.bounds.width, height: 170)
             }
             
-            // Parallelogram Shape with Dynamic Width based on Text
             GeometryReader { geometry in
-                // Further reduce width by subtracting more points
-                let textWidth = min(geometry.size.width - 70, 220) - 60 // Further reduced width
+                let textWidth = min(geometry.size.width - 70, 220) - 60
 
                 Parallelogram()
                     .fill(Color.white)
-                    .frame(width: textWidth, height: 40) // Adjust the height for text
-                    .offset(x: 10, y: 15) // Keep space for text
+                    .frame(width: textWidth, height: 40)
+                    .offset(x: 10, y: 15)
 
-                // Text inside the parallelogram with added padding constraints
                 Text(character.name)
                     .font(.subheadline)
                     .bold()
                     .foregroundColor(.black)
                     .frame(width: textWidth, height: 40)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2) // Allow wrapping for long text
-                    .padding(5) // Add padding on all sides of the text
+                    .lineLimit(2)
+                    .padding(15)
             }
-            .frame(height: 70) // Adjust the height for the parallelogram container
-            .padding(.bottom, 10) // Padding at the bottom of the shape to separate it from the content below
+            .frame(height: 70)
+            .padding(.bottom, 10)
+            .padding(.leading, 20)
         }
-        .padding(.horizontal) // Add horizontal padding for the entire view
+        .padding(.horizontal)
     }
 }
 
-struct Parallelogram: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        let slant: CGFloat = 8 // Slant angle for the parallelogram
-
-        path.move(to: CGPoint(x: slant, y: 0))
-        path.addLine(to: CGPoint(x: rect.width, y: 0))
-        path.addLine(to: CGPoint(x: rect.width - slant, y: rect.height))
-        path.addLine(to: CGPoint(x: 0, y: rect.height))
-        path.closeSubpath()
-
-        return path
-    }
-}
