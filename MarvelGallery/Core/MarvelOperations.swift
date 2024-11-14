@@ -10,36 +10,36 @@ import Combine
 import CryptoKit
 
 protocol MarvelOperationsProtocol {
-    func fetchCharacters(offset: Int, limit: Int) -> AnyPublisher<[CharacterListModel], Error>
-    func fetchCharacterDetails(id: Int) -> AnyPublisher<CharacterDetailsModel, Error>
+    func fetchCharacters(offset: Int, limit: Int, searchText: String) -> AnyPublisher<[CharacterListModel], Error>
     func generateMarvelHash() -> String
 }
+
 
 class MarvelOperations: MarvelOperationsProtocol {
    
     private let networkManager: NetworkManaging
     private let apiService: APIServiceProtocol
     private let privateKey = "4bc8a35dc9d43984099a9c0b0fc810169847c2d2"
-    private let publicKey = "b9cfdbb42b402814a37567a6b7c40d3a" 
+    private let publicKey = "b9cfdbb42b402814a37567a6b7c40d3a"
     
     init(networkManager: NetworkManaging, apiService: APIServiceProtocol) {
         self.networkManager = networkManager
         self.apiService = apiService
     }
     
-    func fetchCharacters(offset: Int, limit: Int) -> AnyPublisher<[CharacterListModel], Error> {
-        guard let url = apiService.getCharactersURL(offset: offset, limit: limit) else {
+    func fetchCharacters(offset: Int, limit: Int, searchText: String) -> AnyPublisher<[CharacterListModel], Error> {
+        guard var url = apiService.getCharactersURL(offset: offset, limit: limit, searchText: searchText) else {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
         }
-        
-        return networkManager.fetchData(from: url, responseType: [CharacterListModel].self)
-    }
-    
-    func fetchCharacterDetails(id: Int) -> AnyPublisher<CharacterDetailsModel, Error> {
-        guard let url = apiService.getCharacterDetailsURL(for: id) else {
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        if !searchText.isEmpty {
+            let searchQueryItem = URLQueryItem(name: "name", value: searchText)
+            urlComponents?.queryItems?.append(searchQueryItem)
+        }
+        guard let finalURL = urlComponents?.url else {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
         }
-        return networkManager.fetchData(from: url, responseType: CharacterDetailsModel.self)
+        return networkManager.fetchData(from: finalURL, responseType: [CharacterListModel].self)
     }
     
     func generateMarvelHash() -> String {

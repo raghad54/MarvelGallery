@@ -10,11 +10,19 @@ import SwiftUI
 struct CharacterDetailView: View {
     let character: CharacterListModel
     @Environment(\.presentationMode) var presentationMode
+    @State private var isLoading = true  // Track if data is loading
 
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-        
+            
+            // Progress indicator while loading
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                    .scaleEffect(2)
+                    .padding()
+            }
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -25,12 +33,14 @@ struct CharacterDetailView: View {
                         }) {
                             Image(systemName: "chevron.left")
                                 .foregroundColor(.white)
-                                .font(.system(size: 30))
+                                .font(.system(size: 40))
                         }
                         Spacer()
                     }
                     .padding(.top, 16)
                     .padding(.horizontal)
+                    
+                    // Character Image
                     AsyncImage(url: character.imageUrl) { image in
                         image
                             .resizable()
@@ -39,11 +49,19 @@ struct CharacterDetailView: View {
                             .frame(height: 300)
                             .clipped()
                             .edgesIgnoringSafeArea(.top)
-                        
+                            .onAppear {
+                                // When the image is loaded, hide the loading indicator
+                                isLoading = false
+                            }
                     } placeholder: {
                         Color.gray.frame(maxWidth: .infinity, maxHeight: 300)
                             .edgesIgnoringSafeArea(.top)
+                            .onAppear {
+                                // Show the loading indicator while loading
+                                isLoading = true
+                            }
                     }
+                    
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Name")
                             .font(.system(size: 16))
@@ -91,6 +109,7 @@ struct CharacterDetailView: View {
                     if !character.events.items.isEmpty {
                         SectionView(title: "Events", items: character.events.items)
                     }
+                    
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Related Links")
                             .font(.system(size: 16))
@@ -101,8 +120,12 @@ struct CharacterDetailView: View {
                         SectionWithArrowView(title: "Wiki" , action: {})
                         SectionWithArrowView(title: "Comic Link", action: {})
                     }
-                        .padding(.bottom, 20)
+                    .padding(.bottom, 20)
                 }
+            }
+            .onAppear {
+                // Reset the loading state when the view appears
+                isLoading = true
             }
             .navigationBarHidden(true) // Hides the default navigation bar
         }

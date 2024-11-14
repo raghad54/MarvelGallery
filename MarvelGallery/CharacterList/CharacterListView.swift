@@ -11,83 +11,93 @@ struct CharacterListView: View {
     @ObservedObject var viewModel: CharacterListViewModel
     @State private var searchText: String = ""
     @State private var isSearching: Bool = false
+    @State private var isResultsVisible: Bool = true
+    @State private var showNoResults: Bool = false
+    @State private var debounceTimer: Timer?
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Search Header with Marvel Logo
-                HStack {
-                    Spacer()
-                    Image("marvel_logo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 90)
-                    Spacer()
-
-                    Button(action: {
-                        withAnimation {
-                            isSearching.toggle()
-                        }
-                    }) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.title2)
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding()
-                .background(Color.black)
-
-                // Search Bar
-                if isSearching {
+                VStack {
                     HStack {
-                        TextField("Search Characters", text: $searchText)
-                            .padding(10)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .foregroundColor(.black)
-                            .frame(height: 40)
+                        if !isSearching {
+                            Spacer()
+                            Image("marvel_logo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 90)
+                            Spacer()
+                        } else {
+                            TextField("Search Characters", text: $searchText)
+                                .padding(10)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                                .frame(height: 40)
+                                .padding(.horizontal)
+                        }
 
                         Button(action: {
                             withAnimation {
                                 isSearching.toggle()
-                                searchText = "" // Clear search text when closing
-                                viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
+                                if !isSearching {
+                                    searchText = "" // Clear search text when closing
+                                    isResultsVisible = true // Show table again when search is closed
+                                    showNoResults = false
+                                    viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
+                                } else {
+                                    // Clear character list to show empty state when search is activated
+                                    viewModel.charactersList = []
+                                    isResultsVisible = false // Hide table when search is activated
+                                    showNoResults = false
+                                    viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
+                                }
                             }
                         }) {
-                            Image(systemName: "xmark.circle.fill")
+                            Image(systemName: "magnifyingglass")
+                                .font(.title2)
                                 .foregroundColor(.red)
                         }
                     }
-                    .padding(.horizontal)
-                    .transition(.move(edge: .top)) // Transition effect for search bar appearance
+                    .padding()
+                    .background(Color.black)
+                    .zIndex(1)
                 }
 
-                if viewModel.isLoading && !viewModel.isPaginating {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .red))
-                        .scaleEffect(1.5)
-                        .padding()
-                }
-
-                // Character List
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        ForEach(viewModel.charactersList.filter {
-                            searchText.isEmpty || $0.name.lowercased().contains(searchText.lowercased())
-                        }) { character in
-                            // NavigationLink for character detail view
-                            NavigationLink(destination: CharacterDetailView(character: character)) {
-                                CharacterRowView(character: character)
-                            }
-                            .buttonStyle(PlainButtonStyle()) // Prevent row highlight on tap
-                        }
-
-                        // Pagination Loading Indicator
-                        if viewModel.isPaginating {
+                        // Show Loading Indicator at the top while fetching characters
+                        if viewModel.isLoading && !viewModel.isPaginating && !isSearching {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .red))
                                 .scaleEffect(1.5)
                                 .padding()
+                        }
+
+                        if showNoResults && searchText.isEmpty == false {
+                            Text("No results found.")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding()
+                        }
+
+                        // Show characters if results are visible
+                        if isResultsVisible {
+                            ForEach(viewModel.getCharactersToDisplay()) { character in
+                                // NavigationLink for character detail view
+                                NavigationLink(destination: CharacterDetailView(character: character)) {
+                                    CharacterRowView(character: character)
+                                }
+                                .buttonStyle(PlainButtonStyle()) // Prevent row highlight on tap
+                            }
+
+                            // Pagination Loading Indicator
+                            if viewModel.isPaginating {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .red)) // Red color for pagination indicator
+                                    .scaleEffect(1.5)
+                                    .padding()
+                            }
                         }
                     }
                     .onAppear {
@@ -96,9 +106,16 @@ struct CharacterListView: View {
                             viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
                         }
                     }
-                    .onChange(of: searchText) { _ in
-                        // Reset and fetch new data when search text changes
-                        viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
+                    .onChange(of: searchText) { newValue in
+                        // Cancel previous timer if any
+                        debounceTimer?.invalidate()
+
+                        // Start a new debounce timer
+                        debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                            // Reset and fetch new data when search text changes
+                            showNoResults = false // Hide no results message while loading
+                            viewModel.fetchCharacters(isPaginating: false, searchText: newValue)
+                        }
                     }
                     .onReachBottom {
                         // Trigger pagination when the user reaches the bottom
@@ -106,9 +123,13 @@ struct CharacterListView: View {
                             viewModel.fetchCharacters(isPaginating: true, searchText: searchText)
                         }
                     }
+                    .refreshable {
+                        viewModel.fetchCharacters(isPaginating: false, searchText: searchText)
+                    }
+                    .background(Color.black) // Set the background of the ScrollView to black
                 }
             }
-            .background(Color.black.edgesIgnoringSafeArea(.all))
+            .background(Color.black.edgesIgnoringSafeArea(.all)) // Background for the whole view
         }
     }
 }

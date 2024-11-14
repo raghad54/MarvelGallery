@@ -11,19 +11,27 @@ import SwiftUI
 struct OnReachBottomModifier: ViewModifier {
     let action: () -> Void
     
+    @State private var isTriggered = false
+    
     func body(content: Content) -> some View {
         content
-            .background(GeometryReader { proxy in
-                Color.clear
-                    .onAppear {
-                        let frame = proxy.frame(in: .global)
-                        let bottom = frame.maxY
-                        let screenHeight = UIScreen.main.bounds.height
-                        if bottom < screenHeight {
-                            action()
+            .background(
+                GeometryReader { proxy in
+                    Color.clear
+                        .onChange(of: proxy.frame(in: .global).maxY) { maxY in
+                            // Calculate when the action should be triggered
+                            let screenHeight = UIScreen.main.bounds.height
+                            let triggerOffset: CGFloat = screenHeight * 0.8 // Trigger when 80% of the screen height is reached
+
+                            if maxY < screenHeight + triggerOffset && !isTriggered {
+                                isTriggered = true
+                                action()
+                            } else if maxY > screenHeight + triggerOffset {
+                                isTriggered = false
+                            }
                         }
-                    }
-            })
+                }
+            )
     }
 }
 

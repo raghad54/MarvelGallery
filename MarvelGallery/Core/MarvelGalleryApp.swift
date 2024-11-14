@@ -17,7 +17,7 @@ struct MarvelGalleryApp: App {
 }
 
    func createViewModel() -> CharacterListViewModel {
-        let networkManager = NetworkManager(apiKey: "b9cfdbb42b402814a37567a6b7c40d3a")
+        let networkManager = NetworkManager(apiKey: "")
         let marvelOperations = MarvelOperations(networkManager: networkManager, apiService: APIService())
         return CharacterListViewModel(operations: marvelOperations)
     }
