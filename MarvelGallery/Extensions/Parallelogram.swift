@@ -10,7 +10,7 @@ import SwiftUI
 struct Parallelogram: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        let slant: CGFloat = 8 // Slant angle for the parallelogram
+        let slant: CGFloat = 8 
 
         path.move(to: CGPoint(x: slant, y: 0))
         path.addLine(to: CGPoint(x: rect.width, y: 0))
