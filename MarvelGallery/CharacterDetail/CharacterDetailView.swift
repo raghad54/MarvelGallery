@@ -9,67 +9,102 @@ import SwiftUI
 
 struct CharacterDetailView: View {
     let character: CharacterListModel
-    
+    @Environment(\.presentationMode) var presentationMode
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Character Image
-                if let url = URL(string: "\(character.thumbnail.path).\(character.thumbnail.extension)") {
-                    AsyncImage(url: url) { image in
+        ZStack {
+            Color.black.ignoresSafeArea()
+        
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Custom Back Button
+                    HStack {
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .foregroundColor(.white)
+                                .font(.system(size: 30))
+                        }
+                        Spacer()
+                    }
+                    .padding(.top, 16)
+                    .padding(.horizontal)
+                    AsyncImage(url: character.imageUrl) { image in
                         image
                             .resizable()
                             .scaledToFill()
-                            .frame(width: UIScreen.main.bounds.width, height: 300)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 300)
                             .clipped()
+                            .edgesIgnoringSafeArea(.top)
+                        
                     } placeholder: {
-                        Color.gray
-                            .frame(width: UIScreen.main.bounds.width, height: 300)
+                        Color.gray.frame(maxWidth: .infinity, maxHeight: 300)
+                            .edgesIgnoringSafeArea(.top)
                     }
-                } else {
-                    Color.gray
-                        .frame(width: UIScreen.main.bounds.width, height: 300)
-                }
-                
-                // Character Info
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("NAME")
-                        .font(.caption)
-                        .foregroundColor(.red)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Name")
+                            .font(.system(size: 16))
+                            .foregroundColor(.red)
+                        
+                        Text(character.name)
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                     
-                    Text(character.name)
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.white)
-                    
-                    Text("DESCRIPTION")
-                        .font(.caption)
-                        .foregroundColor(.red)
-                    
-                    Text(character.description.isEmpty ? "No description available." : character.description)
-                        .foregroundColor(.white)
-                        .padding(.bottom, 20)
-                }
-                .padding()
-                
-                // Comics Section
-                Text("COMICS")
-                    .font(.headline)
-                    .foregroundColor(.red)
-                    .padding(.leading, 10)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-                        ForEach(0..<5) { _ in
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(width: 100, height: 150)
+                    // Character Description
+                    VStack(alignment: .leading, spacing: 10) {
+                        if character.description.isEmpty {
+                            Text("No description available.")
+                                .italic()
+                                .foregroundColor(.gray)
+                        } else {
+                            Text("Description")
+                                .font(.system(size: 16))
+                                .foregroundColor(.red)
+                            Text(character.description)
+                                .foregroundColor(.white)
                         }
                     }
-                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    
+                    // Comics Section
+                    if !character.comics.items.isEmpty {
+                        SectionView(title: "Comics", items: character.comics.items)
+                    }
+                    
+                    // Series Section
+                    if !character.series.items.isEmpty {
+                        SectionView(title: "Series", items: character.series.items)
+                    }
+                    
+                    // Stories Section
+                    if !character.stories.items.isEmpty {
+                        SectionView(title: "Stories", items: character.stories.items)
+                    }
+                    
+                    // Events Section
+                    if !character.events.items.isEmpty {
+                        SectionView(title: "Events", items: character.events.items)
+                    }
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Related Links")
+                            .font(.system(size: 16))
+                            .foregroundColor(.red)
+                            .padding(.horizontal)
+                            .padding(.top, 10)
+                        SectionWithArrowView(title: "Linked Details", action: {})
+                        SectionWithArrowView(title: "Wiki" , action: {})
+                        SectionWithArrowView(title: "Comic Link", action: {})
+                    }
+                        .padding(.bottom, 20)
                 }
             }
+            .navigationBarHidden(true) // Hides the default navigation bar
         }
-        .background(Color.black.edgesIgnoringSafeArea(.all))
     }
 }
-

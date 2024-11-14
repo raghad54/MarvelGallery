@@ -14,8 +14,7 @@ struct CharacterRowView: View {
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            let imageUrlString = character.thumbnail.path.replacingOccurrences(of: "http:", with: "https:") + "." + character.thumbnail.extension
-            if let url = URL(string:imageUrlString) {
+            if let url = character.imageUrl {
                 AsyncImage(url: url) { image in
                     image
                         .resizable()

@@ -75,7 +75,11 @@ struct CharacterListView: View {
                         ForEach(viewModel.charactersList.filter {
                             searchText.isEmpty || $0.name.lowercased().contains(searchText.lowercased())
                         }) { character in
-                            CharacterRowView(character: character)
+                            // NavigationLink for character detail view
+                            NavigationLink(destination: CharacterDetailView(character: character)) {
+                                CharacterRowView(character: character)
+                            }
+                            .buttonStyle(PlainButtonStyle()) // Prevent row highlight on tap
                         }
 
                         // Pagination Loading Indicator
